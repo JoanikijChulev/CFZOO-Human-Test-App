@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore CF-ZOO APP, an interactive local application for command-space counterfactual explanations in multi-objective reinforcement learning, and download the app, paper, and thesis.">
+  <meta name="theme-color" content="#171a1b">
+  <title>CF-ZOO APP · Interactive research application</title>
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202526;
+      --muted: #687071;
+      --paper: #f5f3ee;
+      --card: #fffefa;
+      --line: #d8d7d1;
+      --teal: #4c8f92;
+      --coral: #e96f59;
+      --dark: #171a1b;
+    }
+
+    * { box-sizing: border-box; }
+
+    @keyframes rise-in {
+      from { transform: translateY(18px); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes icon-float {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
+
+    @keyframes ambient-shift {
+      from { background-position: 0 0, 100% 100%, 0 0; }
+      to { background-position: 5% 3%, 95% 97%, 0 0; }
+    }
+
+    @keyframes contact-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 5%, rgb(76 143 146 / 12%), transparent 30rem),
+        radial-gradient(circle at 90% 95%, rgb(233 111 89 / 10%), transparent 28rem),
+        var(--paper);
+      background-size: 110% 110%, 110% 110%, auto;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      animation: ambient-shift 16s ease-in-out infinite alternate;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 5rem 0 2rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 1.6rem;
+      align-items: center;
+      max-width: 760px;
+      margin-bottom: 2.5rem;
+      animation: rise-in .65s ease-out backwards;
+    }
+
+    .hero img {
+      display: block;
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      animation: icon-float 5s ease-in-out .8s infinite;
+    }
+
+    .hero > div,
+    article { min-width: 0; }
+
+    .eyebrow {
+      margin: 0 0 .35rem;
+      color: var(--coral);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: .35rem;
+      font-size: clamp(2.15rem, 8vw, 5rem);
+      line-height: .95;
+      letter-spacing: -.06em;
+    }
+
+    .intro {
+      max-width: 650px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    .app-overview {
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr);
+      gap: clamp(1.5rem, 5vw, 4rem);
+      margin-bottom: 4rem;
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgb(255 254 250 / 68%);
+      box-shadow: 0 14px 45px rgb(32 37 38 / 4%);
+      animation: rise-in .7s ease-out .1s backwards;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .app-overview:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 55px rgb(32 37 38 / 8%);
+    }
+
+    .app-overview h2 {
+      max-width: 360px;
+      margin-bottom: 0;
+      font-size: clamp(1.65rem, 4vw, 2.4rem);
+      line-height: 1.1;
+      letter-spacing: -.045em;
+    }
+
+    .overview-copy > p {
+      margin-bottom: 1.2rem;
+      color: var(--muted);
+    }
+
+    .feature-list {
+      display: grid;
+      margin: 0;
+      padding: 0;
+      gap: .65rem;
+      list-style: none;
+    }
+
+    .feature-list li {
+      padding-top: .65rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .feature-list strong { color: var(--ink); }
+
+    .section-heading {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-heading h2 {
+      flex: 0 0 auto;
+      margin: 0;
+      font-size: .82rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .section-heading::after {
+      width: 100%;
+      height: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .downloads {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 22px 70px rgb(32 37 38 / 8%);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .downloads:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 80px rgb(32 37 38 / 12%);
+    }
+
+    .downloads-section { animation: rise-in .7s ease-out .2s backwards; }
+
+    article {
+      display: flex;
+      min-height: 285px;
+      padding: 1.6rem;
+      flex-direction: column;
+      transition: background .2s ease;
+    }
+
+    article:hover { background: #fff; }
+
+    article + article { border-left: 1px solid var(--line); }
+
+    .number {
+      color: var(--teal);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+
+    h3 {
+      margin: 1.4rem 0 .5rem;
+      font-size: 1.45rem;
+      letter-spacing: -.03em;
+    }
+
+    article p {
+      margin-bottom: 1.5rem;
+      color: var(--muted);
+      font-size: .94rem;
+      overflow-wrap: anywhere;
+    }
+
+    .button {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: auto;
+      padding: .75rem 1rem;
+      border: 1px solid var(--dark);
+      border-radius: 999px;
+      align-items: center;
+      gap: .55rem;
+      color: var(--dark);
+      font-size: .88rem;
+      font-weight: 750;
+      text-decoration: none;
+      transition: background .15s ease, color .15s ease, transform .15s ease;
+    }
+
+    .button span {
+      display: inline-block;
+      transition: transform .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--dark);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .button:hover span,
+    .button:focus-visible span { transform: scale(1.2); }
+
+    .button.primary {
+      border-color: var(--coral);
+      background: var(--coral);
+      color: white;
+    }
+
+    .button.primary:hover,
+    .button.primary:focus-visible { background: #cf5945; }
+
+    small {
+      display: block;
+      margin-top: .75rem;
+      color: var(--muted);
+      font-size: .73rem;
+    }
+
+    .repo-link,
+    footer a {
+      width: fit-content;
+      color: var(--teal);
+      font-weight: 750;
+      text-underline-offset: .2em;
+    }
+
+    .repo-link {
+      margin-top: .7rem;
+      font-size: .78rem;
+    }
+
+    .repo-link:hover,
+    .repo-link:focus-visible,
+    footer a:hover,
+    footer a:focus-visible { color: var(--coral); }
+
+    .privacy-note {
+      max-width: 760px;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .intended-use {
+      margin-top: 4rem;
+      animation: rise-in .7s ease-out .3s backwards;
+    }
+
+    .intended-lead {
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr);
+      gap: clamp(1.5rem, 5vw, 4rem);
+      margin: 1.5rem 0 2rem;
+    }
+
+    .intended-lead h3 {
+      margin: 0;
+      font-size: clamp(1.65rem, 4vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: -.045em;
+    }
+
+    .intended-copy > p {
+      margin-bottom: 1rem;
+      color: var(--muted);
+    }
+
+    .scope-note {
+      padding: 1rem 1.1rem;
+      border-left: 3px solid var(--coral);
+      background: rgb(255 254 250 / 72%);
+      font-size: .9rem;
+    }
+
+    .scope-note strong { color: var(--ink); }
+
+    .study-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--line);
+      gap: 1px;
+    }
+
+    .future-work-heading {
+      margin: 0 0 1rem;
+      font-size: .82rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .study {
+      min-width: 0;
+      padding: 1.55rem;
+      background: var(--card);
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .study:hover { background: #fbfaf4; }
+
+    .study-label {
+      color: var(--teal);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .study h3 {
+      margin: 1rem 0 .55rem;
+      font-size: 1.2rem;
+    }
+
+    .study p {
+      margin-bottom: .85rem;
+      color: var(--muted);
+      font-size: .86rem;
+      overflow-wrap: anywhere;
+    }
+
+    .study .measures {
+      margin-bottom: 0;
+      padding-top: .8rem;
+      border-top: 1px solid var(--line);
+      font-size: .78rem;
+    }
+
+    .study .measures strong { color: var(--ink); }
+
+    .contact-cta {
+      display: flex;
+      margin-top: 1.25rem;
+      padding: clamp(1.4rem, 4vw, 2rem);
+      border-radius: 20px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      background: linear-gradient(120deg, #171a1b, #263638, #171a1b);
+      background-size: 200% 200%;
+      color: white;
+      box-shadow: 0 18px 50px rgb(23 26 27 / 16%);
+      animation: contact-shift 9s ease-in-out infinite;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .contact-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 65px rgb(23 26 27 / 24%);
+    }
+
+    .contact-cta h3 {
+      margin: 0 0 .4rem;
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      letter-spacing: -.035em;
+    }
+
+    .contact-cta p {
+      max-width: 690px;
+      margin: 0;
+      color: rgb(255 255 255 / 70%);
+      font-size: .9rem;
+    }
+
+    .contact-cta .button {
+      flex: 0 0 auto;
+      margin-top: 0;
+      border-color: white;
+      color: white;
+    }
+
+    .contact-cta .button:hover,
+    .contact-cta .button:focus-visible {
+      background: white;
+      color: var(--dark);
+    }
+
+    footer {
+      display: flex;
+      margin-top: 5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem 1rem;
+    }
+
+    @media (max-width: 760px) {
+      main { padding-top: 2.5rem; }
+      .hero { grid-template-columns: 76px 1fr; margin-bottom: 2rem; }
+      .hero img { width: 76px; height: 76px; }
+      .app-overview { grid-template-columns: 1fr; margin-bottom: 3rem; }
+      .downloads { grid-template-columns: 1fr; }
+      article { min-height: 245px; }
+      article + article { border-top: 1px solid var(--line); border-left: 0; }
+      .intended-use { margin-top: 3rem; }
+      .intended-lead,
+      .study-grid { grid-template-columns: 1fr; }
+      .contact-cta { align-items: flex-start; flex-direction: column; }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition-duration: .01ms !important;
+      }
+
+      .hero,
+      .app-overview,
+      .downloads-section,
+      .intended-use {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <img src="assets/app-icon.png" alt="CF-ZOO APP logo" width="112" height="112">
+      <div>
+        <p class="eyebrow">Research project</p>
+        <h1>CF-ZOO APP</h1>
+        <p class="intro">Command-space counterfactual explanations for Pareto-conditioned reinforcement-learning policies.</p>
+      </div>
+    </header>
+
+    <section class="app-overview" aria-labelledby="application-overview-title">
+      <div>
+        <p class="eyebrow">Inside the interactive app</p>
+        <h2 id="application-overview-title">From a target command to an actionable explanation.</h2>
+      </div>
+      <div class="overview-copy">
+        <p>The one-file Windows interactive app bundles 15 multi-objective environments and 30 pretrained return- and horizon-conditioned policies. It opens in the browser while all computation and data remain on the user’s computer.</p>
+        <ul class="feature-list">
+          <li><strong>Inspect.</strong> Choose achievable targets or enter a custom command and examine the policy’s action probabilities.</li>
+          <li><strong>Replay.</strong> Play, pause, adjust speed, step forward, or rewind deterministic trajectories.</li>
+          <li><strong>Explain.</strong> Generate CF-ZOO or C&amp;W counterfactual commands and continue their realized rollouts.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="downloads-section" aria-labelledby="downloads-title">
+      <div class="section-heading">
+        <h2 id="downloads-title">Downloads</h2>
+      </div>
+
+      <div class="downloads">
+        <article>
+          <span class="number">01</span>
+          <h3>Interactive App</h3>
+          <p>Explore policies, replay rollouts, and generate counterfactual commands in the complete local interactive app.</p>
+          <a class="button primary" href="https://github.com/JoanikijChulev/CFZOO-Human-Test-App/releases/latest/download/CF-ZOO-InteractiveApp.exe">
+            Download for Windows <span aria-hidden="true">↓</span>
+          </a>
+          <small>Windows 10/11 · 64-bit · 351 MB · no installation</small>
+          <a class="repo-link" href="https://github.com/JoanikijChulev/CFZOO-Human-Test-App" target="_blank" rel="noopener">Interactive app repository <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article>
+          <span class="number">02</span>
+          <h3>Paper</h3>
+          <p>The concise research paper describing the method, experiments, and results.</p>
+          <a class="button" href="downloads/Command_Space_Counterfactual_Explanations_for_Pareto_Conditioned_Reinforcement_Learning.pdf" download>
+            Download paper <span aria-hidden="true">↓</span>
+          </a>
+          <small>PDF · 689 KB</small>
+          <a class="repo-link" href="https://github.com/JoanikijChulev/Counterfactual-Explanations-for-Pareto-Conditioned-RL" target="_blank" rel="noopener">Paper repository <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article>
+          <span class="number">03</span>
+          <h3>Thesis</h3>
+          <p>The full thesis with background, implementation details, analysis, and discussion.</p>
+          <a class="button" href="downloads/thesis-status.txt" download>
+            Download status <span aria-hidden="true">↓</span>
+          </a>
+          <a class="repo-link" href="https://github.com/JoanikijChulev/Explainable-Multi-Objective-RL-with-PCNs" target="_blank" rel="noopener">Thesis repository <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+
+      <p class="privacy-note">The interactive app is safe to run locally and does not upload your data.</p>
+    </section>
+
+    <section class="intended-use" aria-labelledby="intended-use-title">
+      <div class="section-heading">
+        <h2 id="intended-use-title">Intended use</h2>
+      </div>
+
+      <div class="intended-lead">
+        <h3>A controlled testbed for future human evaluation.</h3>
+        <div class="intended-copy">
+          <p>The interactive app supports research examples, decision cards, environment renderings, and reproducible rollout comparisons. Its intended role is to help test whether people understand and can use an explanation—not merely whether the method satisfies a technical metric.</p>
+          <p class="scope-note"><strong>Interpretation boundary.</strong> A command counterfactual is deliberately local: <strong>&Delta;R</strong> is a sufficient command change that crosses the learned policy’s action boundary at one fixed state. It means the foil action becomes preferred there; it does not guarantee the complete requested return.</p>
+        </div>
+      </div>
+
+      <h3 class="future-work-heading">Future work examples</h3>
+      <div class="study-grid" aria-label="Proposed human studies">
+        <div class="study">
+          <span class="study-label">Study 01</span>
+          <h3>Agent assessment</h3>
+          <p>Non-experts would compare a well-trained and poorly trained agent under four conditions: no explanation, action probabilities, a command counterfactual, or a counterfactual with rollout evidence.</p>
+          <p>Participants would predict an action, select a foil command, identify the better-trained agent, and rate their confidence. Failed auditions can reveal confident over-trust.</p>
+          <p class="measures"><strong>Measures:</strong> accuracy, response time, confidence, and acceptance of failed rollouts.</p>
+        </div>
+
+        <div class="study">
+          <span class="study-label">Study 02</span>
+          <h3>Counterfactual comprehension</h3>
+          <p>A short questionnaire would show static decision cards containing the state, plainly named objectives, current command and action, foil action, returned R<sub>cf</sub>, and &Delta;R.</p>
+          <p>Participants would see either numbers alone or the same values with a one-sentence explanation, then identify which objectives must change and select the justified fixed-state conclusion.</p>
+          <p class="measures"><strong>Measures:</strong> answer accuracy, completion time, confidence, and understanding of local scope.</p>
+        </div>
+
+        <div class="study">
+          <span class="study-label">Study 03</span>
+          <h3>Influence guidance</h3>
+          <p>Participants would inspect a short rollout either with states and actions alone or with the thesis’s low-to-high state–command influence signal. At every decision state, this signal rates how strongly the selected action depends on the current command.</p>
+          <p>They would identify the highest- and lowest-influence states: where changing the command is most and least likely to alter the action. The existing dense command scan supplies the reference ranking.</p>
+          <p class="measures"><strong>Measures:</strong> selection accuracy and response time with versus without the influence signal.</p>
+        </div>
+      </div>
+
+      <div class="contact-cta">
+        <div>
+          <h3>Interested in this work?</h3>
+          <p>Whether you want to discuss this project, any of my research, a potential collaboration, or a new idea, feel free to get in touch.</p>
+        </div>
+        <a class="button" href="https://jchulev.com/#contact" target="_blank" rel="noopener">Contact me <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <footer>
+      <span>CF-ZOO APP</span>
+      <span class="footer-links">
+        <a href="https://jchulev.com" target="_blank" rel="me noopener">jchulev.com <span aria-hidden="true">↗</span></a>
+        <a href="https://www.hendrikbaier.com/" target="_blank" rel="noopener">hendrikbaier.com <span aria-hidden="true">↗</span></a>
+      </span>
+    </footer>
+  </main>
+</body>
+</html>

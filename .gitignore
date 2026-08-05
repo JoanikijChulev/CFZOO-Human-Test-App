@@ -1,0 +1,9 @@
+# The 334.5 MB application belongs in GitHub Releases, never in this repository.
+*.exe
+*.exe.sha256
+*.msi
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini
